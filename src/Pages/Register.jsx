@@ -4,65 +4,74 @@ import { AuthContext } from '../provider/AuthProvider';
 import { updateProfile } from 'firebase/auth';
 import { auth } from '../firebase/firebase.config';
 import toast from 'react-hot-toast';
+import axios from 'axios';
+
 
 const Register = () => {
     const { registerWithEmailPassword } = useContext(AuthContext);
     const navigate = useNavigate();
     const [error, setError] = useState('');
 
-    const handleSubmit = (e) => {
-        e.preventDefault(); // Fixed typo
-        setError('');
+   const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
 
-        const form = e.target;
-        const name = form.name.value;
-        const email = form.email.value;
-        const photoUrl = form.photoUrl.value;
-        const password = form.password.value;
+  const form = e.target;
+  const name = form.name.value;
+  const email = form.email.value;
+  const password = form.password.value;
+  const file = form.photoUrl.files[0];
 
-        // Password validation
-        if (password.length < 6) {
-            setError('Password must be at least 6 characters long');
-            toast.error('Password must be at least 6 characters long');
-            return;
-        }
-        if (!/[A-Z]/.test(password)) {
-            setError('Password must contain at least one uppercase letter');
-            toast.error('Password must contain at least one uppercase letter');
-            return;
-        }
-        if (!/[a-z]/.test(password)) {
-            setError('Password must contain at least one lowercase letter');
-            toast.error('Password must contain at least one lowercase letter');
-            return;
-        }
+  if (!file) {
+    toast.error("Please select an image");
+    return;
+  }
 
-        // Register user
-        registerWithEmailPassword(email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                
-                // Update profile
-                updateProfile(auth.currentUser, {
-                    displayName: name,
-                    photoURL: photoUrl
-                })
-                .then(() => {
-                    console.log('Profile updated:', user);
-                    toast.success('Registration successful!');
-                    navigate('/'); // Navigate to home page
-                })
-                .catch((err) => {
-                    console.log('Profile update error:', err);
-                    toast.error('Failed to update profile');
-                });
-            })
-            .catch((err) => {
-                console.log('Registration error:', err);
-                setError(err.message);
-                toast.error(err.message);
-            });
-    };
+  // Password validation
+  if (password.length < 6) {
+    toast.error("Password must be at least 6 characters");
+    return;
+  }
+  if (!/[A-Z]/.test(password)) {
+    toast.error("Password must contain an uppercase letter");
+    return;
+  }
+  if (!/[a-z]/.test(password)) {
+    toast.error("Password must contain a lowercase letter");
+    return;
+  }
+
+  try {
+    // 1️⃣ FormData for ImgBB
+    const formData = new FormData();
+    formData.append("image", file);
+
+    // 2️⃣ Upload image to ImgBB
+    const res = await axios.post(
+      "https://api.imgbb.com/1/upload?key=f9875fc28e859e2ebb3ffc00e77a46c7",
+      formData
+    );
+    
+
+    const mainPhotoUrl = res.data.data.display_url;
+
+    // 3️⃣ Register user
+    await registerWithEmailPassword(email, password);
+
+    // 4️⃣ Update Firebase profile with ImgBB image
+    await updateProfile(auth.currentUser, {
+      displayName: name,
+      photoURL: mainPhotoUrl,
+    });
+
+    toast.success("Registration successful!");
+    navigate("/");
+  } catch (error) {
+    console.error(error);
+    toast.error("Registration failed");
+  }
+};
+
 
     return (
         <div className="hero bg-base-200 min-h-screen">
@@ -114,9 +123,9 @@ const Register = () => {
                                 <label className="label">
                                     <span className="label-text">Photo URL</span>
                                 </label>
-                                <input 
+                                  <input 
                                     name='photoUrl' 
-                                    type="text" 
+                                    type="file" 
                                     className="input input-bordered" 
                                     placeholder="Enter your photo URL" 
                                     required 
