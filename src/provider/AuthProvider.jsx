@@ -1,10 +1,12 @@
 import {
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   GoogleAuthProvider,
   onAuthStateChanged,
-  signInWithPopup
+  signInWithPopup,
 } from "firebase/auth";
 import React, { createContext, useEffect, useState } from "react";
+import axios from "axios";
 import { auth } from "../firebase/firebase.config";
 
 /* eslint-disable react-refresh/only-export-components */
@@ -14,37 +16,60 @@ const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Register with Email & Password
+  // ✅ Register (Email & Password)
   const registerWithEmailPassword = (email, password) => {
     setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
-  // Google Sign In
-  const handleGoogleSignin = () => {
+  // ✅ Login (Email & Password)
+  const loginWithEmailPassword = (email, password) => {
+    setLoading(true);
+    return signInWithEmailAndPassword(auth, email, password);
+  };
+
+  // ✅ Google Login
+  const loginWithGoogle = () => {
     setLoading(true);
     return signInWithPopup(auth, googleProvider);
   };
 
-  // Auth state observer
+  // 🔑 Observe auth + fetch role from backend
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+
+      if (currentUser?.email) {
+        try {
+          const res = await axios.get(
+            `http://localhost:5000/users/role/${currentUser.email}`
+          );
+          setRole(res.data.role);
+        } catch (error) {
+          console.error("Failed to fetch role", error);
+          setRole(null);
+        }
+      } else {
+        setRole(null);
+      }
+
       setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
 
- const authData = {
-  registerWithEmailPassword,
-  loginWithGoogle: handleGoogleSignin,
-  user,
-  loading,
-};
-
+  const authData = {
+    user,
+    role,
+    loading,
+    registerWithEmailPassword,
+    loginWithEmailPassword, 
+    loginWithGoogle,
+  };
 
   return (
     <AuthContext.Provider value={authData}>
