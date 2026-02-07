@@ -8,9 +8,9 @@ const firebaseConfig = {
   projectId: "assignment-10-cd1d6",
   storageBucket: "assignment-10-cd1d6.firebasestorage.app",
   messagingSenderId: "865256513488",
-  appId: "1:865256513488:web:abca35e0b417c365eee3d5",
+  appId: "1:865256513488:web:0215439b231cb720eee3d5"
 };
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-export default app;
+

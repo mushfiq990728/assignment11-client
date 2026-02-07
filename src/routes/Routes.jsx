@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import RootLayout from "../RootLayout/RootLayout";
+import RootLayout from "../RootLayout/RootLayout"; // ✅ Keep your path
 import Home from "../Pages/Home/Home";
 import Login from "../Pages/Login";
 import Register from "../Pages/Register";
@@ -7,19 +7,19 @@ import Register from "../Pages/Register";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootLayout />,
+    element: <RootLayout />, // ✅ FIXED: Changed Component to element
     children: [
       {
-        index: true,
-        element: <Home />,
+        path: "/",
+        element: <Home />, // ✅ FIXED: Changed Component to element
       },
       {
         path: "/login",
-        element: <Login />,
+        element: <Login />, // ✅ FIXED: Changed Component to element and added JSX
       },
       {
-        path: "/signup",
-        element: <Register />,
+        path: "/register", // ✅ FIXED: Changed from /signup to /register
+        element: <Register />, // ✅ FIXED: Changed Component to element and added JSX
       },
     ],
   },

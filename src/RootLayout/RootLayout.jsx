@@ -7,7 +7,7 @@ const RootLayout = () => {
         <div>
             <Outlet></Outlet>
         </div>
-    );
+    ); 
 };
 
 export default RootLayout;

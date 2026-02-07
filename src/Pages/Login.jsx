@@ -10,7 +10,7 @@ const Login = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state || "/"; // go back to where user came from
+  const from = location.state || "/";
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,13 +24,13 @@ const Login = () => {
     loginWithEmailPassword(email, password)
       .then((result) => {
         console.log("Logged in:", result.user);
-        toast.success("Login successful");
+        toast.success("Login successful!");
         navigate(from, { replace: true });
       })
       .catch((err) => {
         console.error("Login error:", err);
         setError(err.message);
-        toast.error(err.message);
+        toast.error("Invalid email or password");
       })
       .finally(() => setLoading(false));
   };
@@ -40,7 +40,7 @@ const Login = () => {
     loginWithGoogle()
       .then((result) => {
         console.log("Google login:", result.user);
-        toast.success("Logged in with Google");
+        toast.success("Logged in with Google!");
         navigate(from, { replace: true });
       })
       .catch((err) => {
@@ -56,7 +56,7 @@ const Login = () => {
         <div className="text-center lg:text-left">
           <h1 className="text-5xl font-bold">Login now!</h1>
           <p className="py-6">
-            Access your pet listings, orders and adoption requests.
+            Access your pet listings and adoption requests.
           </p>
         </div>
         <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
@@ -70,40 +70,44 @@ const Login = () => {
             )}
 
             <form onSubmit={handleSubmit}>
-              <fieldset className="fieldset">
-                <label className="label">Email</label>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Email</span>
+                </label>
                 <input
                   type="email"
                   name="email"
-                  className="input"
-                  placeholder="Email"
+                  className="input input-bordered"
+                  placeholder="Enter your email"
                   required
                 />
-                <label className="label">Password</label>
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Password</span>
+                </label>
                 <input
                   type="password"
                   name="password"
-                  className="input"
-                  placeholder="Password"
+                  className="input input-bordered"
+                  placeholder="Enter your password"
                   required
                 />
-                <div className="mt-2">
-                  <a className="link link-hover text-sm">Forgot password?</a>
-                </div>
-                <div className="mt-2 text-sm">
-                  <span>Don't have an account? </span>
-                  <Link className="text-blue-500" to="/signup">
-                    Register
-                  </Link>
-                </div>
+                <label className="label">
+                  <a href="#" className="label-text-alt link link-hover">
+                    Forgot password?
+                  </a>
+                </label>
+              </div>
+              <div className="form-control mt-6">
                 <button
                   type="submit"
-                  className="btn btn-neutral mt-4"
+                  className="btn btn-primary"
                   disabled={loading}
                 >
                   {loading ? "Logging in..." : "Login"}
                 </button>
-              </fieldset>
+              </div>
             </form>
 
             <div className="divider">OR</div>
@@ -115,6 +119,14 @@ const Login = () => {
             >
               Continue with Google
             </button>
+
+            <p className="text-sm text-center mt-4">
+              Don't have an account?{" "}
+              <Link to="/register" className="text-primary font-semibold">
+                {/* ✅ FIXED: Changed from /signup to /register */}
+                Register
+              </Link>
+            </p>
           </div>
         </div>
       </div>
