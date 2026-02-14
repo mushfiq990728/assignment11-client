@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 const Navbar = () => {
-  const { user, logout } = useContext(AuthContext); // ✅ Get logout from context
+  const { user, logout } = useContext(AuthContext);
 
   const handleLogout = () => {
     logout()
@@ -76,7 +76,12 @@ const Navbar = () => {
       </div>
 
       <div className="navbar-end">
-        <Link to='/dashboard/main' className='btn mr-2'>Dashboard</Link>
+        {/* ✅ FIXED: Removed duplicate dashboard button, changed /dashboard/main to /dashboard */}
+        {user && (
+          <Link to='/dashboard' className='btn btn-outline mr-2'>
+            Dashboard
+          </Link>
+        )}
         {user ? (
           <div className="flex items-center gap-2">
             <span className="hidden md:inline">
