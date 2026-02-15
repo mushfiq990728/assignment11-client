@@ -4,7 +4,10 @@ import Home from "../Pages/Home/Home";
 import Login from "../Pages/Login";
 import Register from "../Pages/Register";
 import DashboardLayout from "../DashboardLayout/DashboardLayout";
-import MainDashboard from "../Pages/Dashboard/MainDashboard/MainDashboard";
+import DonorDashboard from "../Pages/Dashboard/DonorDashboard/DonorDashboard";
+import AdminDashboard from "../Pages/Dashboard/AdminDashboard/AdminDashboard";
+import VolunteerDashboard from "../Pages/Dashboard/VolunteerDashboard/VolunteerDashboard";
+import RoleBasedDashboard from "../Pages/Dashboard/RoleBasedDashboard";
 
 const router = createBrowserRouter([
   {
@@ -30,8 +33,8 @@ const router = createBrowserRouter([
     element: <DashboardLayout />,
     children: [
       {
-        index: true, // ✅ FIXED: Changed from 'main' to index route
-        element: <MainDashboard />,
+        index: true,
+        element: <RoleBasedDashboard />, // ✅ This will render the correct dashboard based on role
       },
       {
         path: 'all-users',
