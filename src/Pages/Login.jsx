@@ -12,7 +12,7 @@ const Login = () => {
   const location = useLocation();
   const from = location.state || "/";
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
@@ -21,33 +21,55 @@ const Login = () => {
     const email = form.email.value;
     const password = form.password.value;
 
-    loginWithEmailPassword(email, password)
-      .then((result) => {
-        console.log("Logged in:", result.user);
-        toast.success("Login successful!");
-        navigate(from, { replace: true });
-      })
-      .catch((err) => {
-        console.error("Login error:", err);
-        setError(err.message);
+    try {
+      const result = await loginWithEmailPassword(email, password);
+      console.log("Logged in:", result.user);
+      toast.success("Login successful!");
+      navigate(from, { replace: true });
+    } catch (err) {
+      console.error("Login error:", err);
+      
+      // Handle specific error messages
+      if (err.message.includes("blocked")) {
+        setError("Your account has been blocked. Please contact admin.");
+        toast.error("Your account has been blocked");
+      } else if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password") {
+        setError("Invalid email or password");
         toast.error("Invalid email or password");
-      })
-      .finally(() => setLoading(false));
+      } else if (err.code === "auth/invalid-credential") {
+        setError("Invalid email or password");
+        toast.error("Invalid email or password");
+      } else {
+        setError(err.message);
+        toast.error("Login failed. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
     setLoading(true);
-    loginWithGoogle()
-      .then((result) => {
-        console.log("Google login:", result.user);
-        toast.success("Logged in with Google!");
-        navigate(from, { replace: true });
-      })
-      .catch((err) => {
-        console.error("Google Login error:", err);
-        toast.error(err.message);
-      })
-      .finally(() => setLoading(false));
+    setError("");
+    
+    try {
+      const result = await loginWithGoogle();
+      console.log("Google login:", result.user);
+      toast.success("Logged in with Google!");
+      navigate(from, { replace: true });
+    } catch (err) {
+      console.error("Google Login error:", err);
+      
+      if (err.message.includes("blocked")) {
+        setError("Your account has been blocked. Please contact admin.");
+        toast.error("Your account has been blocked");
+      } else {
+        setError(err.message);
+        toast.error("Google login failed");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -56,7 +78,7 @@ const Login = () => {
         <div className="text-center lg:text-left">
           <h1 className="text-5xl font-bold">Login now!</h1>
           <p className="py-6">
-            Access your pet listings and adoption requests.
+            Access your blood donation dashboard and manage requests.
           </p>
         </div>
         <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
@@ -123,7 +145,6 @@ const Login = () => {
             <p className="text-sm text-center mt-4">
               Don't have an account?{" "}
               <Link to="/register" className="text-primary font-semibold">
-                {/* ✅ FIXED: Changed from /signup to /register */}
                 Register
               </Link>
             </p>
