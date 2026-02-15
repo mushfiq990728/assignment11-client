@@ -10,6 +10,8 @@ import MyDonationRequests from "../Pages/Dashboard/MyDonationRequests/MyDonation
 import ViewDonationRequest from "../Pages/Dashboard/ViewDonationRequest/ViewDonationRequest";
 import EditDonationRequest from "../Pages/Dashboard/EditDonationRequest/EditDonationRequest";
 import Profile from "../Pages/Dashboard/Profile/Profile";
+import AllUsers from "../Pages/Dashboard/AllUsers/AllUsers";
+import AllDonationRequestsAdmin from "../Pages/Dashboard/AllDonationRequestsAdmin/AllDonationRequestsAdmin";
 
 const router = createBrowserRouter([
   {
@@ -60,37 +62,31 @@ const router = createBrowserRouter([
       },
       {
         path: 'all-users',
-        element: <div className="bg-white rounded-xl shadow-md p-6">
-          <h1 className="text-2xl font-bold">All Users</h1>
-          <p>Coming soon in Step 6...</p>
-        </div>,
+        element: <AllUsers />,
       },
       {
         path: 'all-donation-requests',
-        element: <div className="bg-white rounded-xl shadow-md p-6">
-          <h1 className="text-2xl font-bold">All Donation Requests</h1>
-          <p>Coming soon in Step 6...</p>
-        </div>,
+        element: <AllDonationRequestsAdmin />,
       },
       {
         path: 'content-management',
         element: <div className="bg-white rounded-xl shadow-md p-6">
           <h1 className="text-2xl font-bold">Content Management</h1>
-          <p>Coming soon in Step 7...</p>
+          <p>Coming soon...</p>
         </div>,
       },
       {
         path: 'statistics',
         element: <div className="bg-white rounded-xl shadow-md p-6">
           <h1 className="text-2xl font-bold">Statistics</h1>
-          <p>Coming soon in Step 7...</p>
+          <p>Coming soon...</p>
         </div>,
       },
       {
         path: 'funding',
         element: <div className="bg-white rounded-xl shadow-md p-6">
           <h1 className="text-2xl font-bold">Funding</h1>
-          <p>Coming soon in Step 7...</p>
+          <p>Coming soon...</p>
         </div>,
       },
     ]
