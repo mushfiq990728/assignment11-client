@@ -7,6 +7,9 @@ import DashboardLayout from "../DashboardLayout/DashboardLayout";
 import RoleBasedDashboard from "../Pages/Dashboard/RoleBasedDashboard";
 import CreateDonationRequest from "../Pages/Dashboard/CreateDonationRequest/CreateDonationRequest";
 import MyDonationRequests from "../Pages/Dashboard/MyDonationRequests/MyDonationRequests";
+import ViewDonationRequest from "../Pages/Dashboard/ViewDonationRequest/ViewDonationRequest";
+import EditDonationRequest from "../Pages/Dashboard/EditDonationRequest/EditDonationRequest";
+import Profile from "../Pages/Dashboard/Profile/Profile";
 
 const router = createBrowserRouter([
   {
@@ -45,24 +48,15 @@ const router = createBrowserRouter([
       },
       {
         path: 'donation-request/:id',
-        element: <div className="bg-white rounded-xl shadow-md p-6">
-          <h1 className="text-2xl font-bold">Donation Request Details</h1>
-          <p>Coming soon...</p>
-        </div>,
+        element: <ViewDonationRequest />,
       },
       {
         path: 'edit-donation-request/:id',
-        element: <div className="bg-white rounded-xl shadow-md p-6">
-          <h1 className="text-2xl font-bold">Edit Donation Request</h1>
-          <p>Coming soon...</p>
-        </div>,
+        element: <EditDonationRequest />,
       },
       {
         path: 'profile',
-        element: <div className="bg-white rounded-xl shadow-md p-6">
-          <h1 className="text-2xl font-bold">My Profile</h1>
-          <p>Coming soon...</p>
-        </div>,
+        element: <Profile />,
       },
       {
         path: 'all-users',
